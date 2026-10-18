@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mango Leaf Disease Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h1>🍃 Mango Leaf Disease Detector</h1>
+    <p class="subtitle">Upload a photo of a mango leaf to find out if it is healthy or which disease it has.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="leaf" accept="image/*" required>
+      <button type="submit">Detect Disease</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+      <img src="data:image/jpeg;base64,{{ result.image }}" alt="Uploaded leaf">
+      <h2>{{ result.label }}</h2>
+      <p class="confidence">{{ result.confidence }}% sure</p>
+
+      {% if result.unsure %}
+      <p class="warning">The model is not very sure. Try a clearer photo of a single leaf.</p>
+      {% endif %}
+
+      <ul>
+        {% for name, pct in result.others %}
+        <li><span>{{ name }}</span><span>{{ pct }}%</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
